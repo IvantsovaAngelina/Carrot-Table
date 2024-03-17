@@ -1,0 +1,59 @@
+﻿@page "/table"
+
+@inject IJSRuntime JS
+
+<PageTitle>Таблица</PageTitle>
+<div class="content">
+    <div class="title-content">
+        <h1>Таблица</h1>
+    </div>
+
+    <div class="scroll-table">
+        <table class="head-table">
+            <thead>
+                <tr>
+                    <th id="col1">Номер<span class="resize-handle"></span></th>
+                    <th id="col2">Имя<span class="resize-handle"></span></th>
+                    <th id="col3">Фамилия<span class="resize-handle"></span></th>
+                    <th id="col4">Страна<span class="resize-handle"></span></th>
+                    <th id="col5" style="border-right:none">Команда</th>
+                </tr>
+            </thead>
+        </table>
+        <div class="tbody-scroll">
+            <table>
+                <tbody>
+                    @for(int i = 1; i <= 60; i++)                    
+                    {                        
+                        <tr>                           
+                            <td>@i</td>                           
+                            <td>Макс</td>                           
+                            <td>Фирстапен</td>                           
+                            <td>Бельгия</td>                                                   
+                            <td>@group</td>
+                        </tr>                                       
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code
+{
+    string group = "";
+  
+    protected override void OnInitialized() 
+    {
+        group = "Red Bull";
+    }
+  
+    protected override async Task OnAfterRenderAsync(bool firstRender) 
+    {       
+        if (firstRender) 
+        {           
+            await JS.InvokeVoidAsync("initializeResizableColumns");   
+        }   
+    }
+
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CarrotTable</title>
+    <base href="/" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link href="CarrotTable.styles.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div id="app">
+        <svg class="loading-progress">
+            <circle r="40%" cx="50%" cy="50%" />
+            <circle r="40%" cx="50%" cy="50%" />
+        </svg>
+        <div class="loading-progress-text"></div>
+    </div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+    <script src="_framework/blazor.webassembly.js"></script>
+    <script>
+        window.initializeResizableColumns = () => {
+            const table = document.querySelector('.scroll-table > table');
+            const bodyTable = document.querySelector('.tbody-scroll > table');
+            let startX, startWidthLeft, startWidthRight, handle, leftCol, rightCol;
+
+            function onMouseMove(e) {
+                const dx = e.clientX - startX;
+                leftCol.style.width = `${startWidthLeft + dx}px`;
+                rightCol.style.width = `${startWidthRight - dx}px`;
+                bodyTable.rows[0].cells[leftCol.cellIndex].style.width = leftCol.style.width;
+                bodyTable.rows[0].cells[rightCol.cellIndex].style.width = rightCol.style.width;
+            }
+
+            function onMouseUp() {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            }
+
+            function onMouseDown(e) {
+                handle = e.target;
+                leftCol = handle.parentElement;
+                rightCol = leftCol.nextElementSibling;
+                startX = e.clientX;
+                startWidthLeft = leftCol.offsetWidth;
+                startWidthRight = rightCol.offsetWidth;
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+                e.preventDefault(); 
+            }
+
+            const handles = table.querySelectorAll('.resize-handle');
+            handles.forEach(handle => {
+                handle.addEventListener('mousedown', onMouseDown);
+            });
+
+        };
+    </script>
+</body>
+
+</html>
